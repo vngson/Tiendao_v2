@@ -1,0 +1,505 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Tiên đạo — port of TienDaoWeb/Front_End design system.
+ * Reference: https://tiendao.netlify.app/
+ * Fonts: served from /public/fonts/. Token names mirror the original
+ * (--gold, --black, --background-color-1, --pastel, --title-bg-color)
+ * so we can drop in TienDao component CSS almost verbatim.
+ */
+@font-face {
+  font-family: "UVF Pistilli";
+  src: url("/fonts/UVFPistilli.woff2") format("woff2"),
+       url("/fonts/UVFPistilli.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "UTM ThuPhap Thien An";
+  src: url("/fonts/UTMThuPhapThienAn.woff2") format("woff2"),
+       url("/fonts/UTMThuPhapThienAn.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DFVN Bridge Type";
+  src: url("/fonts/DFVN-BridgeType-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DFVN Lucky Skirt";
+  src: url("/fonts/DFVN-LuckySkirt-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DFVN Arthemys Display";
+  src: url("/fonts/DFVN-ArthemysDisplay-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KD Hidayatullah";
+  src: url("/fonts/KDHidayatullah.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KK7-VCR OSD";
+  src: url("/fonts/KK7-VCROSDBold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SVN-Kelson Sans";
+  src: url("/fonts/SVN-KelsonSansLight.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SVN-Kelson Sans";
+  src: url("/fonts/SVN-KelsonSans.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SVN-Kelson Sans";
+  src: url("/fonts/SVN-KelsonSansBold.woff2") format("woff2");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* TienDao palette (originals) */
+  --gold: #cc9900;
+  --white: #ffffff;
+  --black: #000000;
+  --background-color-1: #f1f1f1;
+  --gray: #8b8b8b;
+  --gray-trans: rgba(139, 139, 139, 0.75);
+  --white-trans: rgba(255, 255, 255, 0.75);
+  --title-bg-color: rgb(228 222 206);
+  --pastel: #ef9595;
+  --red: rgb(255, 0, 0);
+  --blue: #0ea5e9;
+  --facebook: #3b5998;
+  --twitter: rgb(29, 161, 242);
+
+  /* Fonts */
+  --font-body: "Times New Roman", Times, serif;
+  --font-display: "UVF Pistilli", "Times New Roman", serif;
+  --font-utm: "UTM ThuPhap Thien An", "Times New Roman", serif;
+  --font-title: "DFVN Bridge Type", "Times New Roman", serif;
+  --font-decorative: "DFVN Lucky Skirt", "Times New Roman", serif;
+  --font-arthemys: "DFVN Arthemys Display", serif;
+  --font-kd: "KD Hidayatullah", serif;
+  --font-osd: "KK7-VCR OSD", monospace;
+  --font-sans: "SVN-Kelson Sans", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 10px;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--white);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.78)),
+    url("/assets/images/background_image.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--black);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* Dark theme overrides — toggled by `dark` class on <html>.
+ * Inverts background + foreground while preserving gold/pastel accents.
+ * Reuses the same `background_image.jpg` asset inverted via a
+ * `::before` pseudo-element so the `filter` only applies to the
+ * background image — text/icon pixels are NOT inverted (filter on a
+ * real element cascades into its descendants' rendering). The pseudo-
+ * element sits behind content (`z-index: -1`) and is darkened by an
+ * overlay div rather than an opacity drop, so text contrast is
+ * preserved while still showing the artwork.
+ *
+ *   `<body>`  = solid dark surface
+ *   `::before` = inverted artwork, behind content
+ *   `::after`  = dark overlay on top of artwork, behind content */
+html.dark body {
+  background-color: #0e1116;
+  color: #e6e6e6;
+  position: relative;
+}
+html.dark body::before,
+html.dark body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+html.dark body::before {
+  background-image: url("/assets/images/background_image.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  filter: invert(1) hue-rotate(180deg);
+}
+html.dark body::after {
+  background: rgba(14, 17, 22, 0.75);
+}
+html.dark {
+  --white: #0e1116;
+  --black: #e6e6e6;
+  --background-color-1: #1a1f26;
+  /* Lighter than the light-mode gray (#8b8b8b) so secondary text —
+   * chapter subtitle, breadcrumb, helper hints — stays readable on
+   * the dark inverted artwork background. The light value blends into
+   * the overlay and effectively disappears. */
+  --gray: #b8b8b8;
+  --title-bg-color: rgb(50 45 38);
+  --gold: #e0b94a;
+  --pastel: #ef9595;
+  --line: rgba(230, 230, 230, 0.12);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+}
+
+img,
+svg {
+  vertical-align: middle;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+@layer base {
+  .tiendao-title-bg {
+    background: var(--title-bg-color);
+  }
+
+  .tiendao-link {
+    color: var(--black);
+    transition: color 120ms ease;
+  }
+  .tiendao-link:hover {
+    color: var(--gold);
+  }
+
+  /* Novel-reader body. Layout follows Chinese/VN web-novel conventions:
+   *   - Variable `--reader-content-max-width` caps the column (no full-width
+   *     walls of text on 1440+ viewports).
+   *   - Generous line-height (default 1.85) so vertical Vietnamese tones stay
+   *     legible at 19px.
+   *   - `text-align: justify` with `inter-word` only — `inter-character`
+   *     (the old setting) inflated spacing between every CJK glyph and
+   *     made Vietnamese diacritics look detached.
+   *   - `overflow-wrap` lets long unbroken passages wrap instead of
+   *     overflowing the column.
+   *   - `white-space: pre-wrap` preserves paragraphs the translator emits
+   *     as soft line breaks inside one <p>.
+   *   - Each <p> gets a 2em first-line indent (CJK rule, applies even to
+   *     the first paragraph so the rhythm is uniform).
+   *   - `<p>` siblings are separated with a small top margin so wrapping
+   *     inside one <p> doesn't collide with the next block. */
+  .reader-content {
+    font-family: var(--reader-font-family, var(--font-body));
+    font-size: var(--reader-font-size, 19px);
+    line-height: var(--reader-line-height, 1.85);
+    max-width: var(--reader-content-max-width, 80rem);
+    margin-inline: auto;
+    padding-inline: 1rem;
+    text-align: justify;
+    text-justify: inter-word;
+    color: var(--black);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hanging-punctuation: allow-end;
+  }
+
+  @media (min-width: 768px) {
+    .reader-content {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .reader-content {
+      padding-inline: 4rem;
+    }
+  }
+
+  .reader-content p {
+    margin: 0;
+    text-indent: 2em;
+  }
+
+  .reader-content p + p {
+    margin-top: 0.6em;
+  }
+
+  /* Visual polish — selection matches the TienDao gold accent. */
+  .reader-content ::selection {
+    background: rgba(204, 153, 0, 0.28);
+    color: inherit;
+  }
+}
+
+@layer components {
+  .td-input {
+    border-radius: 5px;
+    border: solid 1px var(--black);
+    background: var(--white);
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-title);
+    font-size: 1.4rem;
+    outline: none;
+  }
+  .td-input:focus {
+    border-color: var(--gold);
+  }
+  .td-input-error {
+    border-color: var(--red);
+  }
+
+  .td-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border: 1px solid var(--black);
+    border-radius: 0.5rem;
+    background: var(--white);
+    color: var(--black);
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    transition: all 150ms ease;
+  }
+  .td-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .td-btn-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border: 1px solid var(--gold);
+    border-radius: 0.5rem;
+    background: var(--white);
+    color: var(--gold);
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    transition: all 150ms ease;
+  }
+  .td-btn-gold:hover {
+    background: var(--gold);
+    color: var(--white);
+  }
+
+  .td-btn-pastel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border: 1px solid var(--pastel);
+    border-radius: 0.5rem;
+    background: var(--white);
+    color: var(--pastel);
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    transition: all 150ms ease;
+  }
+
+  .td-card {
+    background: var(--white);
+    border-radius: 1rem;
+    filter: drop-shadow(0 0 10px var(--gray));
+  }
+
+  .td-section-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .td-story-title {
+    font-family: var(--font-title);
+  }
+
+  /* Reader settings dialog — uses CSS vars so light/dark flip for free. */
+  .td-dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+  }
+  .td-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 51;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+  }
+  .td-dialog-panel {
+    background: var(--white);
+    color: var(--black);
+    border-radius: 1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+    width: min(48rem, 100%);
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  html.dark .td-dialog-panel {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Segmented control — high-contrast pill button for popup rows. */
+  .td-segment {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.6rem;
+    border: 1px solid var(--black);
+    border-radius: 15px;
+    background: var(--white);
+    color: var(--black);
+    font-family: var(--font-title);
+    font-size: 1.4rem;
+    transition: all 150ms ease;
+  }
+  .td-segment:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .td-segment-active {
+    background: var(--gold);
+    color: var(--white);
+    border-color: var(--gold);
+  }
+  .td-segment-active:hover {
+    color: var(--white);
+  }
+
+  /* Inline keyboard hint badge — used in the reader breadcrumb to surface
+   * the ← / → shortcuts next to the prev/next chapter labels. */
+  .td-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.2rem;
+    height: 2.2rem;
+    padding: 0 0.6rem;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    font-family: var(--font-sans);
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--gray);
+    opacity: 0.7;
+  }
+}
+
+/* Indeterminate shimmer — a 20rem bar with a moving highlight.
+   * Used in lieu of a stuck 0% progress bar so the reader knows work
+   * is happening. */
+@keyframes td-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.td-shimmer-bar {
+  height: 2px;
+  width: 20rem;
+  margin-inline: auto;
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--gold) 50%,
+      transparent 100%
+    );
+  background-size: 200% 100%;
+  animation: td-shimmer 1.4s ease-in-out infinite;
+}
+
+/* Skeleton text rows — three rounded bars with a sweeping gradient that
+   * mimic paragraph silhouettes while the chapter is being translated. */
+@keyframes td-skeleton {
+  0%   { background-position: -120% 0; }
+  100% { background-position: 120% 0; }
+}
+
+.td-skeleton {
+  border-radius: 6px;
+  height: 1.4em;
+  background:
+    linear-gradient(
+      90deg,
+      var(--background-color-1) 0%,
+      rgba(204, 153, 0, 0.18) 50%,
+      var(--background-color-1) 100%
+    );
+  background-size: 200% 100%;
+  animation: td-skeleton 1.6s ease-in-out infinite;
+}
